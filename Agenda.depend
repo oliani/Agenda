@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1507073703 source:c:\users\oliani\documents\agenda\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Agenda.h"
+
+1507073223 c:\users\oliani\documents\agenda\agenda.h
+	<string.h>
+
