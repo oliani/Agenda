@@ -31,9 +31,20 @@ int ins_contato(Agenda *agenda,Contato novo){
     agenda->total++;
 
     return 1;
-
 }
 
+int rmv_contato(Agenda *agenda, int pos){
+
+    int i;
+
+    for(i = pos; i < agenda->total - 1; i++)
+        agenda->contatos[i] = agenda->contatos[i+1];
+
+    agenda->total --;
+
+    return 1;
+
+}
 
 
 

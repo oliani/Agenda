@@ -25,17 +25,36 @@ int inserir(Agenda *agenda){
     return ins_contato(agenda,novo);
 }
 
-void exibir_contatos(Agenda agenda){
+void exibir_contatos(Agenda *agenda){
 
     int i;
 
-    if (agenda.total == 0)
+    if (agenda->total == 0)
         printf("Agenda vazia!");
     else{
-        for (i = 0; i < agenda.total; i++){
-            printf("%d  - Nome: %s  |  Fone: %s \n",i+1,agenda.contatos[i].nome,agenda.contatos[i].fone);
+        for (i = 0; i < agenda->total; i++){
+            printf("%d  - Nome: %s  |  Fone: %s \n",i+1,agenda->contatos[i].nome,agenda->contatos[i].fone);
         }
     }
+}
+
+int remover_contato(Agenda *agenda){
+
+    int i;
+
+    if (agenda->total == 0){
+        printf("\t\tAgenda vazia!\n\tNão há contatos para serem removidos!");
+        return 0;
+    }
+
+    exibir_contatos(agenda);
+    printf("Digite o número do contato a ser removido: ");
+    scanf(" %d",&i);
+
+    return rmv_contato(agenda,i-1);
+
+
+
 }
 
 int main()
@@ -58,8 +77,15 @@ int main()
                 else
                     printf("O contato não foi adicionado, agenda cheia!");
                 break;
+            case 2:
+                controle = remover_contato(&agenda);
+                if (controle == 1)
+                    printf("Contato removido com sucesso!");
+                else
+                    printf("O contato não foi removido, agenda vazia!");
+                break;
             case 5:
-                exibir_contatos(agenda);
+                exibir_contatos(&agenda);
                 break;
             case 6:
                 sair = 1;
