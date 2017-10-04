@@ -1,6 +1,5 @@
 /**
     Developed by Eduardo Luiz Oliani
-
 */
 
 #include <stdio.h>
@@ -16,12 +15,27 @@ int inserir(Agenda *agenda){
     printf("Digite o nome do novo contato: ");
     fflush(stdin);
     fgets(novo.nome,100,stdin);
+    novo.nome[strlen(novo.nome)-1]= '\0';//Remove o caractere new line
 
     printf("Digite o numero do novo contato: ");
     fflush(stdin);
     fgets(novo.fone,20,stdin);
+    novo.fone[strlen(novo.fone)-1]= '\0';
 
     return ins_contato(agenda,novo);
+}
+
+void exibir_contatos(Agenda agenda){
+
+    int i;
+
+    if (agenda.total == 0)
+        printf("Agenda vazia!");
+    else{
+        for (i = 0; i < agenda.total; i++){
+            printf("%d  - Nome: %s  |  Fone: %s \n",i+1,agenda.contatos[i].nome,agenda.contatos[i].fone);
+        }
+    }
 }
 
 int main()
@@ -43,6 +57,9 @@ int main()
                     printf("Contato adicionado com sucesso!");
                 else
                     printf("O contato não foi adicionado, agenda cheia!");
+                break;
+            case 5:
+                exibir_contatos(agenda);
                 break;
             case 6:
                 sair = 1;
