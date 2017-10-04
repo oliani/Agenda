@@ -46,6 +46,13 @@ int rmv_contato(Agenda *agenda, int pos){
 
 }
 
+void ordenar_por_nome(Agenda *agenda){
+
+
+
+
+}
+
 
 
 #endif // AGENDA_H_INCLUDED

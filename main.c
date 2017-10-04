@@ -4,18 +4,23 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "Agenda.h"
 
 int inserir(Agenda *agenda){
 
     //Retorna 0 pra avisar que não foi possivel inserir o item, ou 1 se foi
-
+    int i;
     Contato novo;
 
     printf("Digite o nome do novo contato: ");
     fflush(stdin);
     fgets(novo.nome,100,stdin);
+
     novo.nome[strlen(novo.nome)-1]= '\0';//Remove o caractere new line
+
+    for (i = 0; i < strlen(novo.nome);i++)
+        novo.nome[i] = toupper(novo.nome[i]);
 
     printf("Digite o numero do novo contato: ");
     fflush(stdin);
@@ -52,8 +57,6 @@ int remover_contato(Agenda *agenda){
     scanf(" %d",&i);
 
     return rmv_contato(agenda,i-1);
-
-
 
 }
 
