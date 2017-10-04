@@ -46,11 +46,39 @@ int rmv_contato(Agenda *agenda, int pos){
 
 }
 
-void ordenar_por_nome(Agenda *agenda){
+void ordenar(Agenda* agenda){//Falta concertar a função
 
+    int i;
+    int j;
+    int c = 0;
+    Contato temp;
+    int cond = 1;
 
+    for (i=agenda->total-1; (i >= 1) && (cond == 1); i--) {
 
+        cond = 0;
 
+        for (j=0; j < i ;j++) {
+
+            if (agenda->contatos[j+1].nome[0] < agenda->contatos[j].nome[0]) {
+                temp = agenda->contatos[j];
+                agenda->contatos[j] = agenda->contatos[j+1];
+                agenda->contatos[j+1] = temp;
+                cond = 1;
+            } else if(agenda->contatos[j+1].nome[0] == agenda->contatos[j].nome[0]) {
+                while (c < strlen(agenda->contatos[j+1].nome)) {
+                    if (agenda->contatos[j+1].nome[c] < agenda->contatos[j].nome[c]) {
+                        temp = agenda->contatos[j];
+                        agenda->contatos[j] = agenda->contatos[j+1];
+                        agenda->contatos[j+1] = temp;
+                        cond = 1;
+                        break;
+                    }
+                    c++;
+                }
+            }
+        }
+    }
 }
 
 
