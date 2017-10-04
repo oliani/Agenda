@@ -26,24 +26,33 @@ int inserir(Agenda *agenda){
 
 int main()
 {
-    int a;
-
+    int valor;
+    int controle;
+    int sair = 0;
     Agenda agenda;
     iniciar_agenda(&agenda);
+    do{
+        printf("\n\t\tMenu da agenda\n\n\t\t1 - Novo contato\n\t\t2 - Remover contato\n\t\t3 - Pesquisar por telefone\n\t\t4 - Pesquisar por nome\n\t\t5 - Exibir todos os contatos\n\t\t6 - Sair\n\n\t\tEscolha: ");
+        scanf(" %d",&valor);
 
-    printf("\n\t\tMenu da agenda\n\n\t\t1 - Novo contato\n\t\t2 - Remover contato\n\t\t3 - Pesquisar por telefone\n\t\t4 - Pesquisar por nome\n\t\t5 - Exibir todos os contatos\n\t\t6 - Sair\n\n\t\tEscolha: ");
-    scanf(" %d",&a);
+        switch(valor){
 
+            case 1:
+                controle = inserir(&agenda);
+                if (controle == 1)
+                    printf("Contato adicionado com sucesso!");
+                else
+                    printf("O contato não foi adicionado, agenda cheia!");
+                break;
+            case 6:
+                sair = 1;
 
+            default:
+                break;
+        }
 
-    if(a==1)
-    a  = inserir(&agenda);
-
-    printf("a = %d,\n Nome do contato: %s, \nnumero: %s",a,agenda.contatos[0].nome,agenda.contatos[0].fone);
-
-
-
-
+    } while(sair == 0);
+    //printf("a = %d,\n Nome do contato: %s, \nnumero: %s",a,agenda.contatos[0].nome,agenda.contatos[0].fone);
 
     return 0;
 
