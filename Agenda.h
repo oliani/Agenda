@@ -46,41 +46,69 @@ int rmv_contato(Agenda *agenda, int pos){
 
 }
 
-void ordenar(Agenda* agenda){//Falta concertar a função
-
+void ordenar(Agenda* agenda){
     int i;
     int j;
-    int c = 0;
-    Contato temp;
-    int cond = 1;
+    Contato aux;
 
-    for (i=agenda->total-1; (i >= 1) && (cond == 1); i--) {
-
-        cond = 0;
-
-        for (j=0; j < i ;j++) {
-
-            if (agenda->contatos[j+1].nome[0] < agenda->contatos[j].nome[0]) {
-                temp = agenda->contatos[j];
-                agenda->contatos[j] = agenda->contatos[j+1];
-                agenda->contatos[j+1] = temp;
-                cond = 1;
-            } else if(agenda->contatos[j+1].nome[0] == agenda->contatos[j].nome[0]) {
-                while (c < strlen(agenda->contatos[j+1].nome)) {
-                    if (agenda->contatos[j+1].nome[c] < agenda->contatos[j].nome[c]) {
-                        temp = agenda->contatos[j];
-                        agenda->contatos[j] = agenda->contatos[j+1];
-                        agenda->contatos[j+1] = temp;
-                        cond = 1;
-                        break;
-                    }
-                    c++;
-                }
+    for (i = 1; i < agenda->total; i++){
+        for (j = 1; j < agenda->total; j++){
+            if (strcmp(agenda->contatos[j-1].nome, agenda->contatos[j].nome) > 0){//verifica o valor retornado pela função para decidir se deve mudar de posição ou não
+                aux = agenda->contatos[j-1];
+                agenda->contatos[j-1] = agenda->contatos[j];
+                agenda->contatos[j] = aux;
             }
         }
     }
 }
+void importar_contatos(Agenda *agenda){//le os contatos de um txt
 
+    int i;
 
+    FILE *arquivo =  fopen("contatos.txt","r");//Faz a abertura no modo leitura de arquivo
+
+    if(!arquivo){//Caso o arquivo não exista ele é riado aqui, e um aviso é gerado que não há informações salvas
+        printf("Não foram encontrados dados para serem carregados.");
+    }else{
+
+        fscanf(arquivo,"%d\n",&agenda->total);
+
+        if(agenda->total == 0)//se o arquivo existir mas não contiver contatos uma aviso será exibido tambem
+            printf("Não foram encontrados dados para serem carregados.");
+
+        for (i = 0; i < agenda->total; i++){
+
+                fscanf(arquivo,"%s\n",&agenda->contatos[i].nome);
+
+                fscanf(arquivo,"%s\n",&agenda->contatos[i].fone);
+
+        }
+    }
+    int fclose(FILE *arquivo);
+}
+
+void exportar_contatos (Agenda agenda){//salva os contatos em um txt
+
+    int i;
+
+    FILE *arquivo =  fopen("contatos.txt","w+");
+
+    if(!arquivo){
+        printf("Não foram encontrados dados para serem carregados.");
+        arquivo =  fopen("contatos.txt","w+");
+    }
+
+    fprintf(arquivo,"%d\n",agenda.total);
+
+    for (i = 0; i < agenda.total; i++){
+
+            fprintf(arquivo,"%s\n",agenda.contatos[i].nome);
+
+            fprintf(arquivo,"%s\n",agenda.contatos[i].fone);
+
+    }
+
+    int fclose(FILE *arquivo);
+}
 
 #endif // AGENDA_H_INCLUDED
