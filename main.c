@@ -15,6 +15,8 @@ void exibir_contatos(Agenda *agenda);
 
 int remover_contato(Agenda *agenda);
 
+void pesquisa_numerica(Agenda agenda);
+
 int main()
 {
     setlocale(LC_ALL,"Portuguese");
@@ -24,10 +26,17 @@ int main()
     int valor;
     int controle;
     int sair = 0;
+    char passe[20];
     Agenda agenda;
 
-    iniciar_agenda(&agenda);
-    importar_contatos(&agenda);
+    controle = iniciar_agenda(&agenda);
+    if (controle == 0){
+        printf("Ocorreu um erro ao iniciar a agenda!");
+        return EXIT_SUCCESS;
+    }
+    controle = importar_contatos(&agenda);
+    if(controle == 0)
+        printf("Nenhum contato salvo foi encontrado!");
 
     do{
 
@@ -44,11 +53,16 @@ int main()
                     printf("O contato não foi adicionado, agenda cheia!");
                 break;
             case 2:
+                ordenar(&agenda);
                 controle = remover_contato(&agenda);
                 if (controle == 1)
                     printf("Contato removido com sucesso!");
                 else
                     printf("O contato não foi removido!");
+                break;
+            case 3:
+                ordenar_numerica(&agenda);
+                pesquisa_numerica(agenda);
                 break;
             case 5:
                 ordenar(&agenda);
@@ -56,9 +70,13 @@ int main()
                 break;
             case 6:
                 ordenar(&agenda);
-                exportar_contatos(agenda);
+                controle = exportar_contatos(agenda);
+                if (controle == 1)
+                    printf("Contatos salvos com sucesso!");
+                else
+                    printf("Ocorreu um erro ao  salvar os contatos, ou não existem contatos a serem salvos!");
                 sair = 1;
-
+                break;
             default:
                 break;
         }
@@ -120,11 +138,30 @@ int remover_contato(Agenda *agenda){
     printf("Digite o número do contato a ser removido: ");
     scanf(" %d",&i);
 
-    if(i < 1 || i >= agenda->total){
+    if(i < 1 || i > agenda->total){
         printf("Contato inexistente! Verifique o valor digitado.\n");
         return 0;
     }
 
     return rmv_contato(agenda,i-1);
+}
+
+void pesquisa_numerica(Agenda agenda){
+
+    char passe[20];
+    int controle;
+
+    printf("Digite o numero do contato a ser pesquisado: ");
+    fflush(stdin);
+    fgets(passe,100,stdin);
+
+    passe[strlen(passe) - 1] = '\0';
+
+    controle = procura_binaria(agenda,passe);
+
+    if(controle > -1)
+        printf("Contato encontrado: Nome: %s  |  Fone: %s",agenda.contatos[controle].nome,agenda.contatos[controle].fone);
+    else
+        printf("Nenhum contato com o numero %s foi encontrado!",passe);
 
 }
