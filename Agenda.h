@@ -2,11 +2,13 @@
 #define AGENDA_H_INCLUDED
 #define TAM 1000
 #include <string.h>
-
+/**
+    Developed by Eduardo Luiz Oliani
+*/
 typedef struct{
 
     char nome[100];
-    char fone[20];
+    long long fone;
 } Contato;
 
 typedef struct{
@@ -15,7 +17,7 @@ typedef struct{
     int total;
 } Agenda;
 
-int iniciar_agenda(Agenda *a){//Inicia a agenda
+int iniciar_agenda(Agenda *a){
 
     a->total = 0;
 
@@ -65,20 +67,42 @@ void ordenar(Agenda* agenda){
         }
     }
 }
-void ordenar_numerica(Agenda* agenda){
-    int i;
-    int j;
-    Contato aux;
+void bb_sort(Agenda* agenda){
 
-    for (i = 1; i < agenda->total; i++){
-        for (j = 1; j < agenda->total; j++){
-            if (strcmp(agenda->contatos[j-1].fone, agenda->contatos[j].fone) > 0){//verifica o valor retornado pela função para decidir se deve mudar de posição ou não
-                aux = agenda->contatos[j-1];
-                agenda->contatos[j-1] = agenda->contatos[j];
-                agenda->contatos[j] = aux;
-            }
-        }
-    }
+	int i;
+	int j;
+	int cond = 1;
+	Contato aux;
+
+	for (i =(agenda->total) - 1; (i >= 1) && (cond == 1); i--){
+		cond = 0;
+		for (j=0; j < i ;j++){
+			if (agenda->contatos[j+1].fone < agenda->contatos[j].fone){
+				aux = agenda->contatos[j];
+				agenda->contatos[j] = agenda->contatos[j+1];
+				agenda->contatos[j+1] = aux;
+				cond = 1;
+			}
+		}
+	}
+}
+
+int bi_search(Agenda agenda, long long key){
+
+      int inicio = 0;
+      int fim = agenda.total - 1;
+      int meio;
+      while(inicio <= fim)
+      {
+            meio = (inicio + fim) / 2;
+            if(key > agenda.contatos[meio].fone)
+                  inicio = meio + 1;
+            else if(key < agenda.contatos[meio].fone)
+                  fim = meio - 1;
+            else
+                  return meio;
+      }
+      return -1;
 }
 
 Agenda pesquisa_nominal(Agenda agenda, char keyword[100]){
@@ -109,27 +133,6 @@ Agenda pesquisa_nominal(Agenda agenda, char keyword[100]){
     return encontrados;
 }
 
-int procura_binaria(Agenda agenda, char numero[20]){
-
-    if (strcmp(agenda.contatos[0].fone,numero) == 0)//caso so exista um contato
-        return 0;
-
-    int inicio = 0;
-    int fim = agenda.total - 1;
-    int meio = (inicio+fim)/2;
-
-    while (inicio < fim ){
-        if (strcmp(agenda.contatos[meio].fone,numero) < 0)
-            inicio = meio;
-        else if (strcmp(agenda.contatos[meio].fone,numero) == 0)
-            return meio;
-        else
-            fim = meio - 1;
-
-        meio = (inicio + fim)/2;
-    }
-        return -1;
-}
 int importar_contatos(Agenda *agenda){//le os contatos de um txt
 
     int i;
@@ -149,7 +152,7 @@ int importar_contatos(Agenda *agenda){//le os contatos de um txt
 
                 fscanf(arquivo,"%s\n",&agenda->contatos[i].nome);
 
-                fscanf(arquivo,"%s\n",&agenda->contatos[i].fone);
+                fscanf(arquivo,"%d\n",&agenda->contatos[i].fone);
         }
     }
     int fclose(FILE *arquivo);
@@ -175,7 +178,7 @@ int exportar_contatos (Agenda agenda){//salva os contatos em um txt
 
             fprintf(arquivo,"%s\n",agenda.contatos[i].nome);
 
-            fprintf(arquivo,"%s\n",agenda.contatos[i].fone);
+            fprintf(arquivo,"%d\n",agenda.contatos[i].fone);
 
     }
 

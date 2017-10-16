@@ -59,8 +59,8 @@ int main()
                     printf("O contato não foi removido!");
                 break;
             case 3:
-                ordenar_numerica(&agenda);
-                pesquisa_numerica(agenda);
+                bb_sort(&agenda);
+                procurar_numero(agenda);
                 break;
             case 4:
                 pesquisar_nome(agenda);
@@ -91,23 +91,69 @@ int main()
 
 int inserir(Agenda *agenda){
 
-    //Retorna 0 pra avisar que não foi possivel inserir o item, ou 1 se foi
     int i;
+    char fone[20];
+    int aux;
+    int aux2;
     Contato novo;
 
     printf("Digite o nome do novo contato: ");
     fflush(stdin);
-    fgets(novo.nome,100,stdin);
-
-    novo.nome[strlen(novo.nome)-1]= '\0';//Remove o caractere new line
+    gets(novo.nome);
 
     for (i = 0; i < strlen(novo.nome);i++)
         novo.nome[i] = toupper(novo.nome[i]);
 
+    do{//Verificando se há contatos con nomes repetidos
+        aux = 0;
+        for(i = 0; i < agenda->total; i ++){
+            if(strcmp(novo.nome,agenda->contatos[i].nome) == 0)
+                aux++;
+        }
+
+        if(aux > 0){
+            printf("Este nome j%c foi cadastrado, tente novamente: ",133);
+            fflush(stdin);
+            gets(novo.nome);
+        }
+
+        for (i = 0; i < strlen(novo.nome);i++)
+            novo.nome[i] = toupper(novo.nome[i]);
+
+    }while(aux > 0);
+
     printf("Digite o numero do novo contato: ");
     fflush(stdin);
-    fgets(novo.fone,20,stdin);
-    novo.fone[strlen(novo.fone)-1]= '\0';
+    fgets(fone,20,stdin);
+    fone[strlen(fone)-1]= '\0';
+    do{
+        aux = 0;
+        for (i = 0; i < strlen(fone);i++){
+            if(fone[i] > 47 && fone [i] < 58)
+                aux++;
+        }
+        if(aux == strlen(fone)){
+            novo.fone = atoi(fone);
+            for(i = 0; i <= agenda->total;i++){
+                if(novo.fone == agenda->contatos[i].fone)
+                    aux2++;
+            }
+        }
+        else{
+            printf("Digite apenas n%cmeros! Tente novamente: ",163);
+            fflush(stdin);
+            gets(fone);
+        }
+
+        if (aux2 != 0){
+            printf("N%cmero repetido! Tente novamente: ",163);
+            fflush(stdin);
+            gets(fone);
+        }
+
+    }while(aux != strlen(fone) && aux2 == 0);
+
+    novo.fone = atoi(fone);
 
     return ins_contato(agenda,novo);
 }
@@ -120,7 +166,7 @@ void exibir_contatos(Agenda *agenda){
         printf("Agenda vazia!");
     else{
         for (i = 0; i < agenda->total; i++){
-            printf("%d  - Nome: %s  |  Fone: %s \n",i+1,agenda->contatos[i].nome,agenda->contatos[i].fone);
+            printf("%d  - Nome: %s  |  Fone: %d \n",i+1,agenda->contatos[i].nome,agenda->contatos[i].fone);
         }
     }
 }
@@ -147,25 +193,6 @@ int remover_contato(Agenda *agenda){
     return rmv_contato(agenda,i-1);
 }
 
-void pesquisa_numerica(Agenda agenda){
-
-    char passe[20];
-    int controle;
-
-    printf("Digite o numero do contato a ser pesquisado: ");
-    fflush(stdin);
-    fgets(passe,100,stdin);
-
-    passe[strlen(passe) - 1] = '\0';
-
-    controle = procura_binaria(agenda,passe);
-
-    if(controle > -1)
-        printf("Contato encontrado: Nome: %s  |  Fone: %s",agenda.contatos[controle].nome,agenda.contatos[controle].fone);
-    else
-        printf("Nenhum contato com o número %s foi encontrado!",passe);
-}
-
 void pesquisar_nome(Agenda agenda){
 
     char key[100];
@@ -186,8 +213,42 @@ void pesquisar_nome(Agenda agenda){
     printf("Total encrontrados %d\n",encontrados.total);
 
     for(i = 0; i<encontrados.total; i++){
-        printf("%d - Nome: %s  |  Fone: %s\n",i+1,encontrados.contatos[i].nome,encontrados.contatos[i].fone);
+        printf("%d - Nome: %s  |  Fone: %d\n",i+1,encontrados.contatos[i].nome,encontrados.contatos[i].fone);
     }
     if(encontrados.total == 0)
         printf("Nenhum contato com o termo %s foi encontrado.",key);
+}
+void procurar_numero(Agenda agenda){
+
+    int controle;
+    char fone[20];
+    long long key;
+    int aux;
+    int i;
+
+    printf("Digite o numero do contato a ser pesquisado: ");
+    fflush(stdin);
+    gets(fone);
+    do{
+        aux = 0;
+        for (i = 0; i < strlen(fone);i++){
+            if(fone[i] > 47 && fone [i] < 58)
+                aux++;
+        }
+        if(aux != strlen(fone)){
+            printf("Digite apenas n%cmeros! Tente novamente: ",163);
+            fflush(stdin);
+            gets(fone);
+        }
+        key = atoi(fone);
+        printf("key = %d",key);
+
+    }while(aux != strlen(fone));
+
+    controle = bi_search(agenda,key);
+
+    if(controle > -1)
+        printf("Contato encontrado: Nome: %s  |  Fone: %d",agenda.contatos[controle].nome,agenda.contatos[controle].fone);
+    else
+        printf("Nenhum contato com o número %d foi encontrado!",key);
 }
