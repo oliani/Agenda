@@ -31,8 +31,7 @@ int ins_contato(Agenda *agenda,Contato novo){
         return 0;
     }
 
-    strcpy(agenda->contatos[agenda->total].nome,novo.nome);
-    strcpy(agenda->contatos[agenda->total].fone,novo.fone);
+    agenda->contatos[agenda->total] = novo;
     agenda->total++;
 
     return 1;
@@ -82,24 +81,54 @@ void ordenar_numerica(Agenda* agenda){
     }
 }
 
+Agenda pesquisa_nominal(Agenda agenda, char keyword[100]){
+
+    int i;
+    int j;
+    int aux;
+    int k;
+    Agenda encontrados;
+    encontrados.total = 0;
+
+    for(i = 0; i < agenda.total; i++){
+        aux = 0;
+        for(j = 0; j < strlen(agenda.contatos[i].nome) ; j++){
+            if(agenda.contatos[i].nome[j] == keyword[0]){
+                for (k = 0; k < strlen(keyword);k++,j++){
+                    if(agenda.contatos[i].nome[j] == keyword[k]){
+                        aux++;
+                    }
+                }
+            }
+        }
+        if(aux >= strlen(keyword)){
+            encontrados.contatos[encontrados.total] = agenda.contatos[i];
+            encontrados.total++;
+        }
+    }
+    return encontrados;
+}
+
 int procura_binaria(Agenda agenda, char numero[20]){
 
-        int inicio = 0;
-        int fim = agenda.total - 1;
-        int meio = (inicio+fim)/2;
+    if (strcmp(agenda.contatos[0].fone,numero) == 0)//caso so exista um contato
+        return 0;
 
-        while (inicio <= fim){
-            if (strcmp(agenda.contatos[meio].fone,numero) < 0)
-                inicio = meio;
-            else if (strcmp(agenda.contatos[meio].fone,numero) == 0)
-                return meio;
-            else
-                fim = meio - 1;
+    int inicio = 0;
+    int fim = agenda.total - 1;
+    int meio = (inicio+fim)/2;
 
-            meio = (inicio + fim)/2;
-        }
-            return -1;
+    while (inicio < fim ){
+        if (strcmp(agenda.contatos[meio].fone,numero) < 0)
+            inicio = meio;
+        else if (strcmp(agenda.contatos[meio].fone,numero) == 0)
+            return meio;
+        else
+            fim = meio - 1;
 
+        meio = (inicio + fim)/2;
+    }
+        return -1;
 }
 int importar_contatos(Agenda *agenda){//le os contatos de um txt
 

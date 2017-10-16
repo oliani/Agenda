@@ -3,8 +3,6 @@
 */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include "Agenda.h"
 #include <windows.h>
 #include <locale.h>
@@ -17,10 +15,10 @@ int remover_contato(Agenda *agenda);
 
 void pesquisa_numerica(Agenda agenda);
 
+void pesquisar_nome(Agenda agenda);
+
 int main()
 {
-    setlocale(LC_ALL,"Portuguese");
-
     system("color 0e");
 
     int valor;
@@ -63,6 +61,9 @@ int main()
             case 3:
                 ordenar_numerica(&agenda);
                 pesquisa_numerica(agenda);
+                break;
+            case 4:
+                pesquisar_nome(agenda);
                 break;
             case 5:
                 ordenar(&agenda);
@@ -162,6 +163,31 @@ void pesquisa_numerica(Agenda agenda){
     if(controle > -1)
         printf("Contato encontrado: Nome: %s  |  Fone: %s",agenda.contatos[controle].nome,agenda.contatos[controle].fone);
     else
-        printf("Nenhum contato com o numero %s foi encontrado!",passe);
+        printf("Nenhum contato com o número %s foi encontrado!",passe);
+}
 
+void pesquisar_nome(Agenda agenda){
+
+    char key[100];
+    int i;
+    Agenda encontrados;
+
+    printf("Digite o termo de pesquisa: ");
+    fflush(stdin);
+    fgets(key,100,stdin);
+
+    for (i = 0; i < strlen(key);i++)
+        key[i] = toupper(key[i]);
+
+        key[strlen(key)-1] = '\0';
+
+    encontrados = pesquisa_nominal(agenda,key);
+
+    printf("Total encrontrados %d\n",encontrados.total);
+
+    for(i = 0; i<encontrados.total; i++){
+        printf("%d - Nome: %s  |  Fone: %s\n",i+1,encontrados.contatos[i].nome,encontrados.contatos[i].fone);
+    }
+    if(encontrados.total == 0)
+        printf("Nenhum contato com o termo %s foi encontrado.",key);
 }
