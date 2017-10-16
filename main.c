@@ -128,6 +128,7 @@ int inserir(Agenda *agenda){
     fone[strlen(fone)-1]= '\0';
     do{
         aux = 0;
+        aux2 = 0;
         for (i = 0; i < strlen(fone);i++){
             if(fone[i] > 47 && fone [i] < 58)
                 aux++;
