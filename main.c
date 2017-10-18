@@ -112,7 +112,7 @@ int inserir(Agenda *agenda){
         }
 
         if(aux > 0){
-            printf("Este nome j%c foi cadastrado, tente novamente: ",133);
+            printf("Este nome j%c foi cadastrado, tente novamente: ",160);
             fflush(stdin);
             gets(novo.nome);
         }
@@ -146,13 +146,13 @@ int inserir(Agenda *agenda){
             gets(fone);
         }
 
-        if (aux2 != 0){
+        if (aux2 > 0){
             printf("N%cmero repetido! Tente novamente: ",163);
             fflush(stdin);
             gets(fone);
         }
 
-    }while(aux != strlen(fone) && aux2 == 0);
+    }while(aux != strlen(fone) || aux2 != 0);
 
     novo.fone = atoi(fone);
 

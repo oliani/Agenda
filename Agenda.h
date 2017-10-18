@@ -130,6 +130,7 @@ Agenda pesquisa_nominal(Agenda agenda, char keyword[100]){
             encontrados.total++;
         }
     }
+    ordenar(&encontrados);
     return encontrados;
 }
 
