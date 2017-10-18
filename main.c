@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include "Agenda.h"
-#include <windows.h>
 #include <locale.h>
 
 int inserir(Agenda *agenda);
@@ -30,7 +29,7 @@ int main()
     controle = iniciar_agenda(&agenda);
     if (controle == 0){
         printf("Ocorreu um erro ao iniciar a agenda!");
-        return EXIT_SUCCESS;
+        sair = 1;
     }
     controle = importar_contatos(&agenda);
     if(controle == 0)
